@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Ice BlogWriter</title>
+
+		<link rel="stylesheet" href="index.css">
+		<style>
+			body {
+				margin: 0;
+				background: white;
+				display: flex;
+				width: 100vw;
+				height: 100vh;
+				color: black;
+			}
+
+			div.section {
+				flex: 1;
+				background: rgb(240, 240, 240);
+				padding: 10px;
+				display: flex;
+				flex-direction: column;
+			}
+
+			div.section.small {
+				flex: 0.5;
+			}
+
+			input[type="text"] {
+				margin-bottom: 10px;
+			}
+
+			textarea {
+				height: 200px;
+				flex: 1;
+			}
+
+			input[type="text"],
+			textarea {
+				padding: 10px;
+				border: none;
+				resize: none;
+				font-family: sans-serif;
+				display: block;
+				width: 100%;
+				outline: none;
+				font-size: 16px;
+			}
+
+			textarea[disabled] {
+				background: #dedede;
+				white-space: pre;
+				overflow: auto;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+		</style>
+		<link rel="stylesheet"
+			  href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.css" />
+	</head>
+
+	<body>
+		<div class="section">
+			<input id="title" type="text" placeholder="Title" />
+			<textarea id="body" placeholder="Body"></textarea>
+		</div>
+		<div class="section" style="padding-left:0;">
+			<div id="md" class="markdown-body" style="padding:10px;background-color: white;flex: 1;"></div>
+		</div>
+		<div class="section small" style="padding-left:0;">
+			<textarea id="out" style="font-family:monospace;" disabled></textarea>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.js"></script>
+		<script>
+			var converter = new showdown.Converter();
+			var body = document.getElementById("body");
+			var title = document.getElementById("title");
+			var out = document.getElementById("out");
+			var md = document.getElementById("md")
+
+			var parse = (t) => {
+				return t.replace(/\n|\r/g, "\\n")
+			}
+			var run = () => {
+				out.innerHTML = `
+{
+	"title": "${parse(title.value)}",
+	"content": "${parse(body.value.trim())}",
+	"date": ${Date.now()}
+}
+				`.trim();
+				md.innerHTML = converter.makeHtml(body.value.trim())
+			}
+
+			run();
+
+			body.addEventListener("keyup", (e) => {
+				run()
+			})
+			title.addEventListener("keyup", (e) => {
+				run()
+			})
+		</script>
+	</body>
+</html>
