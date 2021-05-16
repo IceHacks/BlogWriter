@@ -85,17 +85,18 @@
 			var md = document.getElementById("md")
 
 			var parse = (t) => {
-				return t.replace(/\n|\r/g, "\\n")
+				//return t.replace(/\n|\r/g, "\\n")
+				return t.replace(/`/g, "\\`")
 			}
 			var run = () => {
 				out.innerHTML = `
 {
 	"title": "${parse(title.value)}",
-	"content": "${parse(body.value.trim())}",
+	"content": \`${parse(body.value.trim())}\`,
 	"date": ${Date.now()}
 }
 				`.trim();
-				md.innerHTML = converter.makeHtml(body.value.trim())
+				md.innerHTML = converter.makeHtml(parse(body.value.trim()))
 			}
 
 			run();
